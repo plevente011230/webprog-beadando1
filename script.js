@@ -7,6 +7,7 @@ const table = document.querySelector("tbody")
 startBtn.addEventListener("click", startGame)
 table.addEventListener("click", placeBulb)
 
+const darkCells = document.getElementsByClassName("dark-cell")
 const bulb = '💡'
 let player
 let size
@@ -20,8 +21,25 @@ function placeBulb(e) {
             cell.innerText = bulb
             cell.className = "light-cell"
             makeLight(row, col);
+            console.log(darkCells)
+            checkAroundDarkCells()
         }
     }
+}
+
+function checkAroundDarkCells() {
+    console.log(darkCells)
+    for(cell in darkCells) {
+        console.log(cell.innerText)
+        console.log(cell.className)
+        if(countBulbsAround(cell) == parseInt(cell.innerText)) {
+            cell.className = "dark-cell-satisfied"
+        }
+    }
+}
+
+function countBulbsAround(cell) {
+    return 1
 }
 
 function makeLight(row, col) {
