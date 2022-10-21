@@ -41,9 +41,9 @@ function countBulbsAround(cell) {
     let col = cell.cellIndex
     let count = 0
     if(isInPlayArea(row - 1, col) && getCell(row - 1, col).innerText == bulb) { count++; }
-    if(isInPlayArea(row + 1, col) && getCell((cell.parentElement.rowIndex) + 1, cell.cellIndex).innerText == bulb) { count++; }
-    if(isInPlayArea(row, col - 1) && getCell(cell.parentElement.rowIndex, (cell.cellIndex) - 1).innerText == bulb) { count++; }
-    if(isInPlayArea(row, col + 1) && getCell(cell.parentElement.rowIndex, (cell.cellIndex) + 1).innerText == bulb) { count++; }
+    if(isInPlayArea(row + 1, col) && getCell(row + 1, col).innerText == bulb) { count++; }
+    if(isInPlayArea(row, col - 1) && getCell(row, col - 1).innerText == bulb) { count++; }
+    if(isInPlayArea(row, col + 1) && getCell(row, col + 1).innerText == bulb) { count++; }
     return count
 }
 
@@ -58,7 +58,7 @@ function lightUp(row, col) {
     const originalCell = getCell(row, col)
     row--
     while(isInPlayArea(row, col)) {
-        if(getCellClass(row, col) == "dark-cell") { return; }
+        if(getCell(row, col).className == "dark-cell") { return; }
         if(getCell(row, col).innerText == bulb) {
             getCell(row, col).className = "wrong-cell"
             originalCell.className = "wrong-cell"
@@ -73,7 +73,7 @@ function lightDown(row, col) {
     const originalCell = getCell(row, col)
     row++
     while(isInPlayArea(row, col)) {
-        if(getCellClass(row, col) == "dark-cell") { return; }
+        if(getCell(row, col).className == "dark-cell") { return; }
         if(getCell(row, col).innerText == bulb) {
             getCell(row, col).className = "wrong-cell"
             originalCell.className = "wrong-cell"
@@ -88,7 +88,7 @@ function lightLeft(row, col) {
     const originalCell = getCell(row, col)
     col--
     while(isInPlayArea(row, col)) {
-        if(getCellClass(row, col) == "dark-cell") { return; }
+        if(getCell(row, col).className == "dark-cell") { return; }
         if(getCell(row, col).innerText == bulb) {
             getCell(row, col).className = "wrong-cell"
             originalCell.className = "wrong-cell"
@@ -116,10 +116,6 @@ function lightRight(row, col) {
 
 function isInPlayArea(row, col) {
     return row < size && row >= 0 && col < size && col >= 0
-}
-
-function getCellClass(row, col) {
-    return table.rows[row].cells[col].className
 }
 
 function getCell(row, col) {
