@@ -7,27 +7,101 @@ const table = document.querySelector("tbody")
 startBtn.addEventListener("click", startGame)
 table.addEventListener("click", placeBulb)
 
-const bulb = '<img src="./bulb.png"></img>'
+const bulb = '💡'
 let player
+let size
 
 function placeBulb(e) {
     if(e.target.matches("td")) {
-        const row = e.target.closest("tr").rowIndex
-        const col = e.target.closest("td").cellIndex
-        let cell = table.rows[row].cells[col]
-        if(cell.className == "plain-cell") {
-            cell.innerHTML = bulb
+        let row = e.target.closest("tr").rowIndex
+        let col = e.target.closest("td").cellIndex
+        let cell = getCell(row, col)
+        if(cell.className == "light-cell" || cell.className == "plain-cell") {
+            cell.innerText = bulb
             cell.className = "light-cell"
-            makeLight();
+            makeLight(row, col);
         }
     }
 }
 
-function makeLight() {
-
+function makeLight(row, col) {
+    lightUp(row, col)
+    lightDown(row, col)
+    lightLeft(row, col)
+    lightRight(row, col)
 }
 
+function lightUp(row, col) {
+    const originalCell = getCell(row, col)
+    row--
+    while(isInPlayArea(row, col)) {
+        if(getCellClass(row, col) == "dark-cell") { return; }
+        if(getCell(row, col).innerText == bulb) {
+            getCell(row, col).className = "wrong-cell"
+            originalCell.className = "wrong-cell"
+            return
+        }
+        getCell(row, col).className = "light-cell"
+        row--;
+    }
+}
 
+function lightDown(row, col) {
+    const originalCell = getCell(row, col)
+    row++
+    while(isInPlayArea(row, col)) {
+        if(getCellClass(row, col) == "dark-cell") { return; }
+        if(getCell(row, col).innerText == bulb) {
+            getCell(row, col).className = "wrong-cell"
+            originalCell.className = "wrong-cell"
+            return
+        }
+        getCell(row, col).className = "light-cell"
+        row++;
+    }
+}
+
+function lightLeft(row, col) {
+    const originalCell = getCell(row, col)
+    col--
+    while(isInPlayArea(row, col)) {
+        if(getCellClass(row, col) == "dark-cell") { return; }
+        if(getCell(row, col).innerText == bulb) {
+            getCell(row, col).className = "wrong-cell"
+            originalCell.className = "wrong-cell"
+            return
+        }
+        getCell(row, col).className = "light-cell"
+        col--;
+    }
+}
+
+function lightRight(row, col) {
+    const originalCell = getCell(row, col)
+    col++
+    while(isInPlayArea(row, col)) {
+        if(getCell(row, col).className == "dark-cell") { return; }
+        if(getCell(row, col).innerText == bulb) {
+            getCell(row, col).className = "wrong-cell"
+            originalCell.className = "wrong-cell"
+            return
+        }
+        getCell(row, col).className = "light-cell"
+        col++;
+    }
+}
+
+function isInPlayArea(row, col) {
+    return row < size && row >= 0 && col < size && col >= 0
+}
+
+function getCellClass(row, col) {
+    return table.rows[row].cells[col].className
+}
+
+function getCell(row, col) {
+    return table.rows[row].cells[col]
+}
 
 function startGame() {
     menuDiv.hidden = true
@@ -35,6 +109,7 @@ function startGame() {
     easyGameBoardRows.map(row => table.innerHTML += row)
     player = document.querySelector("#nameInput").value
     document.querySelector("#name").innerText = "Játékos neve: " +  player
+    size = difficulty.value
 }
 
 const easyGameBoardRows = [
