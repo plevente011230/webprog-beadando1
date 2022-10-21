@@ -20,26 +20,31 @@ function placeBulb(e) {
         if(cell.className == "light-cell" || cell.className == "plain-cell") {
             cell.innerText = bulb
             cell.className = "light-cell"
-            makeLight(row, col);
-            console.log(darkCells)
+            makeLight(row, col)
             checkAroundDarkCells()
+            console.log(darkCells)
         }
     }
 }
 
 function checkAroundDarkCells() {
-    console.log(darkCells)
-    for(cell in darkCells) {
-        console.log(cell.innerText)
-        console.log(cell.className)
-        if(countBulbsAround(cell) == parseInt(cell.innerText)) {
-            cell.className = "dark-cell-satisfied"
-        }
+    for(let i = 0; i < darkCells.length; i++) {
+        console.log(countBulbsAround(darkCells[i]))
+        if(countBulbsAround(darkCells[i]) == parseInt(darkCells[i].innerText)) {
+            darkCells[i].style.color = "green"
+        } else { darkCells[i].style.color = "white" }
     }
 }
 
 function countBulbsAround(cell) {
-    return 1
+    let row = cell.parentElement.rowIndex
+    let col = cell.cellIndex
+    let count = 0
+    if(isInPlayArea(row - 1, col) && getCell(row - 1, col).innerText == bulb) { count++; }
+    if(isInPlayArea(row + 1, col) && getCell((cell.parentElement.rowIndex) + 1, cell.cellIndex).innerText == bulb) { count++; }
+    if(isInPlayArea(row, col - 1) && getCell(cell.parentElement.rowIndex, (cell.cellIndex) - 1).innerText == bulb) { count++; }
+    if(isInPlayArea(row, col + 1) && getCell(cell.parentElement.rowIndex, (cell.cellIndex) + 1).innerText == bulb) { count++; }
+    return count
 }
 
 function makeLight(row, col) {
@@ -128,6 +133,7 @@ function startGame() {
     player = document.querySelector("#nameInput").value
     document.querySelector("#name").innerText = "Játékos neve: " +  player
     size = difficulty.value
+    checkAroundDarkCells()
 }
 
 const easyGameBoardRows = [

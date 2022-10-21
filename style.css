@@ -10,6 +10,7 @@ td {
     border: 1px solid black;
     width: 2em;
     text-align: center;
+    font-weight: bold;
 }
 
 .plain-cell {
@@ -30,5 +31,6 @@ td {
 }
 
 .dark-cell-satisfied {
+    background-color: black;
     color: green;
 }
