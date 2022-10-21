@@ -7,15 +7,27 @@ const table = document.querySelector("tbody")
 startBtn.addEventListener("click", startGame)
 table.addEventListener("click", placeBulb)
 
+const bulb = '<img src="./bulb.png"></img>'
 let player
 
 function placeBulb(e) {
     if(e.target.matches("td")) {
         const row = e.target.closest("tr").rowIndex
         const col = e.target.closest("td").cellIndex
-        
+        let cell = table.rows[row].cells[col]
+        if(cell.className == "plain-cell") {
+            cell.innerHTML = bulb
+            cell.className = "light-cell"
+            makeLight();
+        }
     }
 }
+
+function makeLight() {
+
+}
+
+
 
 function startGame() {
     menuDiv.hidden = true
@@ -26,73 +38,73 @@ function startGame() {
 }
 
 const easyGameBoardRows = [
-    '<tr style="height: 2em;">' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="text-align: center; color: white; background-color: black; width: 2em;">1</td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
+    '<tr>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="dark-cell">1</td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
     '</tr>',
 
-    '<tr style="height: 2em;">' +
-    '<td style="background-color: white; width: 2em;"></td>' + 
-    '<td style="text-align: center; color: white; background-color: black; width: 2em;">0</td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="text-align: center; color: white; background-color: black; width: 2em;">2</td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
+    '<tr>' +
+    '<td class="plain-cell"></td>' + 
+    '<td class="dark-cell">0</td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="dark-cell">2</td>' +
+    '<td class="plain-cell"></td>' +
     '</tr>',
 
-    '<tr style="height: 2em;">' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
+    '<tr>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
     '</tr>',
 
-    '<tr style="height: 2em;">' +
-    '<td style="background-color: black; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: black; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: black; width: 2em;"></td>' +
+    '<tr>' +
+    '<td class="dark-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="dark-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="dark-cell"></td>' +
     '</tr>',
 
-    '<tr style="height: 2em;">' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
+    '<tr>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
     '</tr>',
 
-    '<tr style="height: 2em;">' +
-    '<td style="background-color: white; width: 2em;"></td>' + 
-    '<td style="background-color: black; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="text-align: center; color: white; background-color: black; width: 2em;">2</td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
+    '<tr>' +
+    '<td class="plain-cell"></td>' + 
+    '<td class="dark-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="dark-cell">2</td>' +
+    '<td class="plain-cell"></td>' +
     '</tr>',
 
-    '<tr style="height: 2em;">' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="text-align: center; color: white; background-color: black; width: 2em;">3</td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
-    '<td style="background-color: white; width: 2em;"></td>' +
+    '<tr>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="dark-cell">3</td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
+    '<td class="plain-cell"></td>' +
     '</tr>',
 ]

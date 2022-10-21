@@ -2,6 +2,37 @@ table {
     border-collapse: collapse;
 }
 
+tr {
+    height: 2em;
+}
+
 td {
     border: 1px solid black;
+}
+
+img {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.plain-cell {
+    background-color: white;
+    width: 2em;
+}
+
+.light-cell {
+    background-color: #FFFACD;
+    width: 2em;
+}
+
+.wrong-cell {
+    background-color: #FFCBCA;
+    width: 2em;
+}
+
+.dark-cell {
+    background-color: black;
+    width: 2em;
+    color: white;
+    text-align: center;
 }
