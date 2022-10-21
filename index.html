@@ -27,20 +27,20 @@
             <li>A játékot egy játékos játssza, amíg meg nem oldja a rejtvényt, tehát több játékos egyidejű kezeléséről vagy körökre osztásról nem kell gondoskodni.</li>
         </ul>
         <form>
-            <label for="name1">Játékos neve: </label>
-            <input type="text" id="name1" placeholder="Játékos neve">
+            <label for="name">Játékos neve: </label>
+            <input type="text" id="nameInput" placeholder="Játékos neve" required="true">
             <label for="size">Pályaméret:</label>
             <select id="difficulty">
                 <option value="easy" selected="true">Könnyű</option>
                 <option value="hard" >Nehéz</option>
                 <option value="extreme" >Extrém</option>
             </select>
-            <input type="button" id="startGame" value="Játék kezdése">
+            <input type="button" id="startGame" value="Játék indítása">
         </form>
     </div>
 
     <div id="game" hidden>
-        <h1 id="output"></h1>
+        <h1 id="name"></h1>
         <table>
             <tbody></tbody>
         </table>

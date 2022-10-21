@@ -1,15 +1,28 @@
 const startBtn = document.querySelector("#startGame")
 const menuDiv = document.querySelector("#menu")
+const difficulty = document.querySelector("#difficulty")
 const gameDiv = document.querySelector("#game")
 const table = document.querySelector("tbody")
 
 startBtn.addEventListener("click", startGame)
+table.addEventListener("click", placeBulb)
+
+let player
+
+function placeBulb(e) {
+    if(e.target.matches("td")) {
+        const row = e.target.closest("tr").rowIndex
+        const col = e.target.closest("td").cellIndex
+        
+    }
+}
 
 function startGame() {
     menuDiv.hidden = true
     gameDiv.hidden = false
-
     easyGameBoardRows.map(row => table.innerHTML += row)
+    player = document.querySelector("#nameInput").value
+    document.querySelector("#name").innerText = "Játékos neve: " +  player
 }
 
 const easyGameBoardRows = [
