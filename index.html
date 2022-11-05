@@ -29,14 +29,21 @@
         <form>
             <label for="name">Játékos neve: </label>
             <input type="text" id="nameInput" placeholder="Játékos neve" required="true">
-            <label for="size">Pályaméret:</label>
+            <label for="size">Pálya:</label>
             <select id="difficulty">
-                <option value="7" id="easy" selected="true">Könnyű</option>
-                <option value="7" id="hard" >Nehéz</option>
-                <option value="10" id="extreme" >Extrém</option>
+                <option value="7" id="0" selected="true">Könnyű</option>
+                <option value="7" id="1" >Nehéz</option>
+                <option value="10" id="2" >Extrém</option>
             </select>
+        
             <input type="button" id="startGame" value="Játék indítása">
             <input type="button" id="createOwnGrid" value="Saját pálya létrehozása">
+            <br>
+
+            <label for="savedGames">Mentett játékok</label>
+            <select id="savedGames"></select>
+            <input type="button" id="loadGame" value="Játékmenet betöltése">
+            
         </form>
     </div>
 
@@ -45,24 +52,32 @@
         <table>
             <tbody id="gameBoard"></tbody>
         </table>
-        <button id="saveGame">Játék mentése</button>
+        <button id="pauseGame">Játék megállítása</button>
         <div id="win" hidden>
             <h1>WIN</h1>
             <button id="restart">Újrakezdés</button>
+        </div>
+        <div id="save" hidden>
+            <form>
+                <label for="gameName">Jatekmenet neve</label>
+                <input type="text" id="gameName">
+                <input type="button" id="saveBtn" value="Mentés">
+            </form>
         </div>
     </div>
 
     <div id="editor" hidden>
         <form>
-            <label for="rows">Sorok száma: </label>
-            <input id="rows" type="range" min="5" max="15" value="5"><br>
-            <label for="columns">Oszlopok száma: </label>
-            <input id="columns" type="range" min="5" max="15" value="5">
+            <label for="roomName">Pálya neve: </label>
+            <input type="text" id="roomName">
+            <label for="roomSize">Szoba mérete: </label>
+            <input id="roomSize" type="range" min="5" max="15" value="5"><br>
             <input type="button" id="startEditing" value="Cellák szerkesztése">
         </form>
         <table>
-            <tbody id="gridEditor"></tbody>
+            <tbody id="roomEditor"></tbody>
         </table>
+        <button id="saveRoom">Pálya mentése</button>
     </div>
 
 </body>

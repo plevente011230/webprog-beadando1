@@ -7,19 +7,29 @@ const gridEditorDiv = document.querySelector("#gridEditor")
 const openEditorBtn = document.querySelector("#createOwnGrid")
 const restartBtn = document.querySelector("#restart")
 const editorDiv = document.querySelector("#editor")
-const gridEditor = document.querySelector("#gridEditor")
-const rowsInput = document.querySelector("#rows")
-const columnsInput = document.querySelector("#columns")
+const roomEditor = document.querySelector("#roomEditor")
+const roomSizeInput = document.querySelector("#roomSize")
 const startEditingBtn = document.querySelector("#startEditing")
+const saveRoomBtn = document.querySelector("#saveRoom")
+const roomNameInput = document.querySelector("#roomName")
+const pauseBtn = document.querySelector("#pauseGame")
+const saveDiv = document.querySelector("#save")
+const saveBtn = document.querySelector("#saveBtn")
+const gameNameInput = document.querySelector("#gameName")
+const savedGamesSelect = document.querySelector("#savedGames")
+const loadGameBtn = document.querySelector("#loadGame")
 
 startBtn.addEventListener("click", startGame)
 restartBtn.addEventListener("click", startGame)
 openEditorBtn.addEventListener("click", openEditor)
 gameBoard.addEventListener("click", placeBulb)
-rowsInput.addEventListener("input", generateTable)
-columnsInput.addEventListener("input", generateTable)
+roomSizeInput.addEventListener("input", generateTable)
 startEditingBtn.addEventListener("click", startEditing)
-gridEditor.addEventListener("click", placeBarrier)
+roomEditor.addEventListener("click", placeBarrier)
+saveRoomBtn.addEventListener("click", saveGrid)
+pauseBtn.addEventListener("click", pauseGame)
+saveBtn.addEventListener("click", saveGameProgress)
+loadGameBtn.addEventListener("click", loadGame)
 
 let inputAllowed = false
 let wrongCells
@@ -27,6 +37,28 @@ let darkCells
 const bulb = '💡'
 let player
 let size
+let pausedGames = []
+
+function loadGame() {
+    menuDiv.hidden = true
+    gameDiv.hidden = false
+    menuDiv.innerHTML = pausedGames[savedGamesSelect.selectedIndex]
+}
+
+function saveGrid() {
+    let rowsToSave = []
+    let rows = Array.from(roomEditor.querySelectorAll("tr"))
+    rows.map(row => {
+        rowAsHtml = "<tr>" + row.innerHTML + "</tr>"
+        rowsToSave.push(rowAsHtml)
+    })
+    grids.push(rowsToSave)
+    let newOption = difficulty.appendChild(document.createElement("option"))
+    newOption.text = roomNameInput.value
+    clearTable(editorDiv)
+    editorDiv.hidden = true
+    menuDiv.hidden = false
+}
 
 function placeBarrier(e) {
     if(e.target.matches("td") && inputAllowed) {
@@ -49,13 +81,13 @@ function placeBarrier(e) {
 }
 
 function getEditableCell(row, col) {
-    return gridEditor.rows[row].cells[col]
+    return roomEditor.rows[row].cells[col]
 }
 
 function startEditing() {
     inputAllowed = true
-    rowsInput.disabled = true
-    columnsInput.disabled = true
+    roomSizeInput.disabled = true
+
 }
 
 function openEditor() {
@@ -66,10 +98,10 @@ function openEditor() {
 }
 
 function generateTable() {
-    clearTable(gridEditor)
-    for(let i = 0; i < rowsInput.value; i++) {
-        let row = gridEditor.appendChild(document.createElement("tr"))
-        for(let j = 0; j < columnsInput.value; j++) {
+    clearTable(roomEditor)
+    for(let i = 0; i < roomSizeInput.value; i++) {
+        let row = roomEditor.appendChild(document.createElement("tr"))
+        for(let j = 0; j < roomSizeInput.value; j++) {
             td = row.appendChild(document.createElement("td"))
             td.className = "plain-cell"
         }
@@ -79,6 +111,19 @@ function generateTable() {
 function clearTable(table) {
     let rows = Array.from(table.querySelectorAll("tr"))
     rows.map(row => row.remove())
+}
+
+function pauseGame() {
+    pausedGames.push(gameDiv.innerHTML)
+    saveDiv.hidden = false
+}
+
+function saveGameProgress() {
+    let newOption = savedGamesSelect.appendChild(document.createElement("option"))
+    newOption.text = gameNameInput.value
+    saveDiv.hidden = true
+    gameDiv.hidden = true
+    menuDiv.hidden = false
 }
 
 function placeBulb(e) {
@@ -304,17 +349,18 @@ function startGame() {
     } else {
         clearTable(gameBoard)
     }
-    if(difficulty[difficulty.selectedIndex].id == "easy") {
-        easyGameBoardRows.map(row => gameBoard.innerHTML += row)
-    } else if(difficulty[difficulty.selectedIndex].id == "hard") {
-        hardGameBoardRows.map(row => gameBoard.innerHTML += row)
-    } else {
-        extremeGameBoardRows.map(row => gameBoard.innerHTML += row)
-    }
+    // if(difficulty[difficulty.selectedIndex].id == "easy") {
+    //     easyGameBoardRows.map(row => gameBoard.innerHTML += row)
+    // } else if(difficulty[difficulty.selectedIndex].id == "hard") {
+    //     hardGameBoardRows.map(row => gameBoard.innerHTML += row)
+    // } else {
+    //     extremeGameBoardRows.map(row => gameBoard.innerHTML += row)
+    // }
+    grids[difficulty.selectedIndex].map(row => gameBoard.innerHTML += row)
     
     player = document.querySelector("#nameInput").value
     document.querySelector("#name").innerText = "Játékos neve: " +  player
-    size = difficulty.value
+    size = gameBoard.querySelectorAll("tr").length
     darkCells = Array.from(gameBoard.querySelectorAll(".dark-cell"))
     checkAroundDarkCells()
 }
@@ -622,3 +668,5 @@ const easyGameBoardRows = [
     '<td class="plain-cell"></td>' +
     '</tr>',
 ]
+
+let grids = [easyGameBoardRows, hardGameBoardRows, extremeGameBoardRows]
