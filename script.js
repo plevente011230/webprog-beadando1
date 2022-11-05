@@ -2,17 +2,49 @@ const startBtn = document.querySelector("#startGame")
 const menuDiv = document.querySelector("#menu")
 const difficulty = document.querySelector("#difficulty")
 const gameDiv = document.querySelector("#game")
-const table = document.querySelector("tbody")
+const table = document.querySelector("#gameBoard")
+const gridEditorDiv = document.querySelector("#gridEditor")
+const openEditorBtn = document.querySelector("#createOwnGrid")
+const restartBtn = document.querySelector("#restart")
+const editorDiv = document.querySelector("#editor")
+const gridEditor = document.querySelector("#gridEditor")
+const rowsInput = document.querySelector("#rows")
+const columnsInput = document.querySelector("#columns")
 
 startBtn.addEventListener("click", startGame)
-document.querySelector("#restart").addEventListener("click", startGame)
+restartBtn.addEventListener("click", startGame)
+openEditorBtn.addEventListener("click", openEditor)
 table.addEventListener("click", placeBulb)
+rowsInput.addEventListener("input", generateTable)
+columnsInput.addEventListener("input", generateTable)
 
 let wrongCells
 let darkCells
 const bulb = '💡'
 let player
 let size
+
+function openEditor() {
+    menuDiv.hidden = true
+    editorDiv.hidden = false
+    generateTable()
+}
+
+function generateTable() {
+    clearTable()
+    for(let i = 0; i < rowsInput.value; i++) {
+        let row = gridEditor.appendChild(document.createElement("tr"))
+        for(let j = 0; j < columnsInput.value; j++) {
+            td = row.appendChild(document.createElement("td"))
+            td.className = "plain-cell"
+        }
+    }
+}
+
+function clearTable() {
+    let rows = Array.from(gridEditor.querySelectorAll("tr"))
+    rows.map(row => row.remove())
+}
 
 function placeBulb(e) {
     if(e.target.matches("td")) {

@@ -43,19 +43,25 @@
     <div id="game" hidden>
         <h1 id="name"></h1>
         <table>
-            <tbody></tbody>
+            <tbody id="gameBoard"></tbody>
         </table>
-        <button id="save-game">Játék mentése</button>
+        <button id="saveGame">Játék mentése</button>
         <div id="win" hidden>
             <h1>WIN</h1>
             <button id="restart">Újrakezdés</button>
         </div>
     </div>
 
-    <div id="grid-editor" hidden>
+    <div id="editor" hidden>
         <form>
-            
+            <label for="rows">Sorok száma: </label>
+            <input id="rows" type="range" min="5" max="12" value="5"><br>
+            <label for="columns">Oszlopok száma: </label>
+            <input id="columns" type="range" min="5" max="12" value="5">
         </form>
+        <table>
+            <tbody id="gridEditor"></tbody>
+        </table>
     </div>
 
 </body>
