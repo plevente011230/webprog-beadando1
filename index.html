@@ -31,11 +31,12 @@
             <input type="text" id="nameInput" placeholder="Játékos neve" required="true">
             <label for="size">Pályaméret:</label>
             <select id="difficulty">
-                <option value="7" selected="true">Könnyű</option>
-                <option value="7" >Nehéz</option>
-                <option value="10" >Extrém</option>
+                <option value="7" id="easy" selected="true">Könnyű</option>
+                <option value="7" id="hard" >Nehéz</option>
+                <option value="10" id="extreme" >Extrém</option>
             </select>
             <input type="button" id="startGame" value="Játék indítása">
+            <input type="button" id="createOwnGrid" value="Saját pálya létrehozása">
         </form>
     </div>
 
@@ -44,8 +45,19 @@
         <table>
             <tbody></tbody>
         </table>
-        <h1 id="winner" hidden></h1>
+        <button id="save-game">Játék mentése</button>
+        <div id="win" hidden>
+            <h1>WIN</h1>
+            <button id="restart">Újrakezdés</button>
+        </div>
     </div>
+
+    <div id="grid-editor" hidden>
+        <form>
+            
+        </form>
+    </div>
+
 </body>
 <script src="script.js"></script>
 
