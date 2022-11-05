@@ -2,7 +2,7 @@ const startBtn = document.querySelector("#startGame")
 const menuDiv = document.querySelector("#menu")
 const difficulty = document.querySelector("#difficulty")
 const gameDiv = document.querySelector("#game")
-const table = document.querySelector("#gameBoard")
+const gameBoard = document.querySelector("#gameBoard")
 const gridEditorDiv = document.querySelector("#gridEditor")
 const openEditorBtn = document.querySelector("#createOwnGrid")
 const restartBtn = document.querySelector("#restart")
@@ -14,10 +14,11 @@ const columnsInput = document.querySelector("#columns")
 startBtn.addEventListener("click", startGame)
 restartBtn.addEventListener("click", startGame)
 openEditorBtn.addEventListener("click", openEditor)
-table.addEventListener("click", placeBulb)
+gameBoard.addEventListener("click", placeBulb)
 rowsInput.addEventListener("input", generateTable)
 columnsInput.addEventListener("input", generateTable)
 
+let inputAllowed = false
 let wrongCells
 let darkCells
 const bulb = '💡'
@@ -31,7 +32,7 @@ function openEditor() {
 }
 
 function generateTable() {
-    clearTable()
+    clearTable(gridEditor)
     for(let i = 0; i < rowsInput.value; i++) {
         let row = gridEditor.appendChild(document.createElement("tr"))
         for(let j = 0; j < columnsInput.value; j++) {
@@ -41,14 +42,14 @@ function generateTable() {
     }
 }
 
-function clearTable() {
-    let rows = Array.from(gridEditor.querySelectorAll("tr"))
+function clearTable(table) {
+    let rows = Array.from(table.querySelectorAll("tr"))
     rows.map(row => row.remove())
 }
 
 function placeBulb(e) {
-    if(e.target.matches("td")) {
-        wrongCells = Array.from(table.querySelectorAll(".wrong-cell"))
+    if(e.target.matches("td") && inputAllowed) {
+        wrongCells = Array.from(gameBoard.querySelectorAll(".wrong-cell"))
         let row = e.target.closest("tr").rowIndex
         let col = e.target.closest("td").cellIndex
         let cell = getCell(row, col)
@@ -57,7 +58,7 @@ function placeBulb(e) {
                 getCell(row, col).innerText = ""
                 if(getCell(row, col).className == "wrong-cell") {
                     getCell(row, col).className = "light-cell"
-                    wrongCells = Array.from(table.querySelectorAll(".wrong-cell"))
+                    wrongCells = Array.from(gameBoard.querySelectorAll(".wrong-cell"))
                     wrongCells.filter(cell => checkWrongCell(cell)).map(cell => {
                         console.log(cell)
                         cell.className = "light-cell"
@@ -256,31 +257,31 @@ function isInPlayArea(row, col) {
 }
 
 function getCell(row, col) {
-    return table.rows[row].cells[col]
+    return gameBoard.rows[row].cells[col]
 }
 
 function startGame() {
     menuDiv.hidden = true
     document.querySelector("#win").hidden = true
     gameDiv.hidden = false
+    inputAllowed = true
     if(gameDiv.hidden) {
         gameDiv.hidden = false
     } else {
-        let rows = Array.from(table.querySelectorAll("tr"))
-        rows.map(row => row.remove())
+        clearTable(gameBoard)
     }
     if(difficulty[difficulty.selectedIndex].id == "easy") {
-        easyGameBoardRows.map(row => table.innerHTML += row)
+        easyGameBoardRows.map(row => gameBoard.innerHTML += row)
     } else if(difficulty[difficulty.selectedIndex].id == "hard") {
-        hardGameBoardRows.map(row => table.innerHTML += row)
+        hardGameBoardRows.map(row => gameBoard.innerHTML += row)
     } else {
-        extremeGameBoardRows.map(row => table.innerHTML += row)
+        extremeGameBoardRows.map(row => gameBoard.innerHTML += row)
     }
     
     player = document.querySelector("#nameInput").value
     document.querySelector("#name").innerText = "Játékos neve: " +  player
     size = difficulty.value
-    darkCells = Array.from(table.querySelectorAll(".dark-cell"))
+    darkCells = Array.from(gameBoard.querySelectorAll(".dark-cell"))
     checkAroundDarkCells()
 }
 
@@ -291,6 +292,7 @@ function checkForWin() {
         if(cell.className == "plain-cell" || cell.className == "wrong-cell") { return false; }
     }
     document.querySelector("#win").hidden = false
+    inputAllowed = false
     return true;
 }
 
