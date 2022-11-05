@@ -10,6 +10,7 @@ const editorDiv = document.querySelector("#editor")
 const gridEditor = document.querySelector("#gridEditor")
 const rowsInput = document.querySelector("#rows")
 const columnsInput = document.querySelector("#columns")
+const startEditingBtn = document.querySelector("#startEditing")
 
 startBtn.addEventListener("click", startGame)
 restartBtn.addEventListener("click", startGame)
@@ -17,6 +18,8 @@ openEditorBtn.addEventListener("click", openEditor)
 gameBoard.addEventListener("click", placeBulb)
 rowsInput.addEventListener("input", generateTable)
 columnsInput.addEventListener("input", generateTable)
+startEditingBtn.addEventListener("click", startEditing)
+gridEditor.addEventListener("click", placeBarrier)
 
 let inputAllowed = false
 let wrongCells
@@ -25,10 +28,41 @@ const bulb = '💡'
 let player
 let size
 
+function placeBarrier(e) {
+    if(e.target.matches("td") && inputAllowed) {
+        let row = e.target.closest("tr").rowIndex
+        let col = e.target.closest("td").cellIndex
+        let cell = getEditableCell(row, col)
+        if(cell.className == "plain-cell") {
+            cell.className = "dark-cell"
+        } else {
+            if(cell.innerText == "") {
+                cell.innerText = 0
+            } else if(cell.innerText == "4") {
+                cell.className = "plain-cell"
+                cell.innerText = ""
+            } else {
+                cell.innerText = parseInt(cell.innerText) + 1
+            }
+        }
+    }
+}
+
+function getEditableCell(row, col) {
+    return gridEditor.rows[row].cells[col]
+}
+
+function startEditing() {
+    inputAllowed = true
+    rowsInput.disabled = true
+    columnsInput.disabled = true
+}
+
 function openEditor() {
     menuDiv.hidden = true
     editorDiv.hidden = false
     generateTable()
+    inputAllowed = false
 }
 
 function generateTable() {
