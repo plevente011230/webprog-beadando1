@@ -26,7 +26,7 @@ gameBoard.addEventListener("click", placeBulb)
 roomSizeInput.addEventListener("input", generateTable)
 startEditingBtn.addEventListener("click", startEditing)
 roomEditor.addEventListener("click", placeBarrier)
-saveRoomBtn.addEventListener("click", saveGrid)
+saveRoomBtn.addEventListener("click", saveRoom)
 pauseBtn.addEventListener("click", pauseGame)
 saveBtn.addEventListener("click", saveGameProgress)
 loadGameBtn.addEventListener("click", loadGame)
@@ -45,14 +45,16 @@ function loadGame() {
     menuDiv.innerHTML = pausedGames[savedGamesSelect.selectedIndex]
 }
 
-function saveGrid() {
+function saveRoom() {
     let rowsToSave = []
     let rows = Array.from(roomEditor.querySelectorAll("tr"))
     rows.map(row => {
         rowAsHtml = "<tr>" + row.innerHTML + "</tr>"
         rowsToSave.push(rowAsHtml)
+        rowsToSave.push(",")
     })
-    grids.push(rowsToSave)
+    localStorage.setItem(roomNameInput.value, rowsToSave)
+    // grids.push(rowsToSave)
     let newOption = difficulty.appendChild(document.createElement("option"))
     newOption.text = roomNameInput.value
     clearTable(editorDiv)
@@ -343,20 +345,18 @@ function startGame() {
     menuDiv.hidden = true
     document.querySelector("#win").hidden = true
     gameDiv.hidden = false
+    // gameDiv.innerHTML = baseGameDiv
     inputAllowed = true
     if(gameDiv.hidden) {
         gameDiv.hidden = false
     } else {
         clearTable(gameBoard)
     }
-    // if(difficulty[difficulty.selectedIndex].id == "easy") {
-    //     easyGameBoardRows.map(row => gameBoard.innerHTML += row)
-    // } else if(difficulty[difficulty.selectedIndex].id == "hard") {
-    //     hardGameBoardRows.map(row => gameBoard.innerHTML += row)
-    // } else {
-    //     extremeGameBoardRows.map(row => gameBoard.innerHTML += row)
-    // }
-    grids[difficulty.selectedIndex].map(row => gameBoard.innerHTML += row)
+    if(difficulty.selectedIndex < 3) {
+        grids[difficulty.selectedIndex].map(row => gameBoard.innerHTML += row)
+    } else {
+        localStorage.getItem(difficulty.options[difficulty.selectedIndex].text).split(",").map(row => gameBoard.innerHTML += row)
+    }
     
     player = document.querySelector("#nameInput").value
     document.querySelector("#name").innerText = "Játékos neve: " +  player
@@ -670,3 +670,5 @@ const easyGameBoardRows = [
 ]
 
 let grids = [easyGameBoardRows, hardGameBoardRows, extremeGameBoardRows]
+
+const baseGameDiv = '<h1 id="name"></h1><table><tbody id="gameBoard"></tbody></table><button id="pauseGame">Játék megállítása</button><div id="win" hidden><h1>WIN</h1><button id="restart">Újrakezdés</button</div><div id="save" hidden><form><label for="gameName">Jatekmenet neve</label><input type="text" id="gameName"><input type="button" id="saveBtn" value="Mentés"></form></div>'
