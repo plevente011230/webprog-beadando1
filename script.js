@@ -18,6 +18,8 @@ const saveBtn = document.querySelector("#saveBtn")
 const gameNameInput = document.querySelector("#gameName")
 const savedGamesSelect = document.querySelector("#savedGames")
 const loadGameBtn = document.querySelector("#loadGame")
+const timeDiv = document.querySelector("#time")
+const continueBtn = document.querySelector("#continue")
 
 startBtn.addEventListener("click", startGame)
 restartBtn.addEventListener("click", startGame)
@@ -30,6 +32,7 @@ saveRoomBtn.addEventListener("click", saveRoom)
 pauseBtn.addEventListener("click", pauseGame)
 saveBtn.addEventListener("click", saveGameProgress)
 loadGameBtn.addEventListener("click", loadGame)
+continueBtn.addEventListener("click", continueEditing)
 
 let inputAllowed = false
 let wrongCells
@@ -38,11 +41,29 @@ const bulb = '💡'
 let player
 let size
 let pausedGames = []
+let displayedElapsedTime
+let timerRef
+
+function continueEditing() {
+    saveDiv.hidden = true
+    inputAllowed = true
+}
 
 function loadGame() {
     menuDiv.hidden = true
     gameDiv.hidden = false
     menuDiv.innerHTML = pausedGames[savedGamesSelect.selectedIndex]
+}
+
+function getElapsedTime(startTime) {
+    let endTime = new Date()
+    let timeDiff = (endTime.getTime() - startTime.getTime()) / 1000
+    let seconds = Math.floor(timeDiff % 60)
+    let secondsAsString = seconds < 10 ? "0" + seconds : seconds
+    timeDiff = Math.floor(timeDiff / 60)
+    let minutes = timeDiff
+    let minutesAsString = minutes < 10 ? "0" + minutes : minutes
+    return minutesAsString + ":" + secondsAsString 
 }
 
 function saveRoom() {
@@ -54,7 +75,6 @@ function saveRoom() {
         rowsToSave.push(",")
     })
     localStorage.setItem(roomNameInput.value, rowsToSave)
-    // grids.push(rowsToSave)
     let newOption = difficulty.appendChild(document.createElement("option"))
     newOption.text = roomNameInput.value
     clearTable(editorDiv)
@@ -89,7 +109,6 @@ function getEditableCell(row, col) {
 function startEditing() {
     inputAllowed = true
     roomSizeInput.disabled = true
-
 }
 
 function openEditor() {
@@ -122,7 +141,7 @@ function pauseGame() {
 
 function saveGameProgress() {
     let newOption = savedGamesSelect.appendChild(document.createElement("option"))
-    newOption.text = gameNameInput.value
+    newOption.text = gameNameInput.value + " - " + player
     saveDiv.hidden = true
     gameDiv.hidden = true
     menuDiv.hidden = false
@@ -141,7 +160,6 @@ function placeBulb(e) {
                     getCell(row, col).className = "light-cell"
                     wrongCells = Array.from(gameBoard.querySelectorAll(".wrong-cell"))
                     wrongCells.filter(cell => checkWrongCell(cell)).map(cell => {
-                        console.log(cell)
                         cell.className = "light-cell"
                     })
                 } else {
@@ -345,7 +363,13 @@ function startGame() {
     menuDiv.hidden = true
     document.querySelector("#win").hidden = true
     gameDiv.hidden = false
-    // gameDiv.innerHTML = baseGameDiv
+    displayedElapsedTime = "00:00"
+    let startDate = new Date()
+    timerRef = startTimer(startDate)
+    // let getElapsedTimeIntervalRef = setInterval(() => {
+    //     displayedElapsedTime = getElapsedTime(startDate)
+    //     timeDiv.innerText = displayedElapsedTime
+    // }, 1000)
     inputAllowed = true
     if(gameDiv.hidden) {
         gameDiv.hidden = false
@@ -365,6 +389,13 @@ function startGame() {
     checkAroundDarkCells()
 }
 
+function startTimer(startDate) {
+    return setInterval(() => {
+        displayedElapsedTime = getElapsedTime(startDate)
+        timeDiv.innerText = displayedElapsedTime
+    }, 1000)
+}
+
 function checkForWin() {
     const cells = document.querySelectorAll("td")
     for(let cell of cells) {
@@ -373,6 +404,7 @@ function checkForWin() {
     }
     document.querySelector("#win").hidden = false
     inputAllowed = false
+    clearInterval(timerRef)
     return true;
 }
 
