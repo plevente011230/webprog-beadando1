@@ -31,11 +31,6 @@ td {
     color: white;
 }
 
-.dark-cell-satisfied {
-    background-color: black;
-    color: green;
-}
-
-.scores-table>thead>tr>th {
-    text-decoration: underline;
+.scores-table>tr>td {
+    width: 15em;
 }

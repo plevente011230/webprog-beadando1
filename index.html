@@ -40,17 +40,18 @@
             <input type="button" id="createOwnGrid" value="Saját pálya létrehozása">
             <br>
 
-            <label for="savedGames">Mentett játékok</label>
-            <select id="savedGames"></select>
-            <input type="button" id="loadGame" value="Játékmenet betöltése">
-            
+            <div id="loadSavedGame" hidden>
+                <label for="savedGames">Mentett játékok</label>
+                <select id="savedGames"></select>
+                <input type="button" id="loadGame" value="Játékmenet betöltése">               
+            </div>
         </form>
     </div>
 
     <div id="game" hidden>
         <h1 id="name"></h1>
         <h2 id=>Szoba neve: <span id="roomName>"></span></h2>
-        <h2 id="time">Eltelt idő: </h2>
+        <h2 id>Eltelt idő: <span id="time"></span> </h2>
         <table>
             <tbody id="gameBoard"></tbody>
         </table>
@@ -85,9 +86,9 @@
     </div>
 
     <div id="previousGames">
-        <table class="scores-table">
-            <thead>Eddigi játékok</thead>
-            <tbody id="scores">
+        <table>
+            <thead><h3>Eddigi játékok</h3></thead>
+            <tbody id="scores" class="scores-table">
                 <tr>
                     <td>Játékos</td>
                     <td>Pálya</td>

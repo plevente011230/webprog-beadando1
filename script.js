@@ -1,6 +1,6 @@
 const startBtn = document.querySelector("#startGame")
 const menuDiv = document.querySelector("#menu")
-const difficulty = document.querySelector("#difficulty")
+const roomSelect = document.querySelector("#difficulty")
 const gameDiv = document.querySelector("#game")
 const gameBoard = document.querySelector("#gameBoard")
 const gridEditorDiv = document.querySelector("#gridEditor")
@@ -18,13 +18,14 @@ const saveBtn = document.querySelector("#saveBtn")
 const gameNameInput = document.querySelector("#gameName")
 const savedGamesSelect = document.querySelector("#savedGames")
 const loadGameBtn = document.querySelector("#loadGame")
-const timeDiv = document.querySelector("#time")
+const timeSpan = document.querySelector("#time")
 const continueBtn = document.querySelector("#continue")
 const prevoiusGamesDiv = document.querySelector("#previousGames")
 const scoresTable = document.querySelector("#scores")
 const roomNameSpan = document.querySelector("#roomName")
 const backBtn = document.querySelector("#back")
 const winDiv = document.querySelector("#win")
+const loadSavedGameDiv = document.querySelector("#loadSavedGame")
 
 startBtn.addEventListener("click", startGame)
 restartBtn.addEventListener("click", startGame)
@@ -46,6 +47,7 @@ let darkCells
 const bulb = '💡'
 let player
 let size
+let room
 let pausedGames = []
 let pausedGamesTimers = []
 let displayedElapsedTime
@@ -73,6 +75,7 @@ function loadGame() {
     startDate = new Date().getTime() - elapsedTime
     timerRef = startTimer(new Date(startDate))
     darkCells = Array.from(gameBoard.querySelectorAll(".dark-cell"))
+    inputAllowed = true
 }
 
 function getElapsedTime(startTime) {
@@ -95,7 +98,7 @@ function saveRoom() {
         rowsToSave.push(",")
     })
     localStorage.setItem(roomNameInput.value, rowsToSave)
-    let newOption = difficulty.appendChild(document.createElement("option"))
+    let newOption = roomSelect.appendChild(document.createElement("option"))
     newOption.text = roomNameInput.value
     clearTable(editorDiv)
     editorDiv.hidden = true
@@ -167,6 +170,7 @@ function saveGameProgress() {
     saveDiv.hidden = true
     gameDiv.hidden = true
     menuDiv.hidden = false
+    loadSavedGameDiv.hidden = false
     prevoiusGamesDiv.hidden = false
     clearInterval(timerRef)
     pausedGamesTimers.push(new Date().getTime() - startDate.getTime())
@@ -273,7 +277,25 @@ function makeLight(row, col) {
     down = false
     left = false
     right = false
-    while(!done) {
+    // while(!done) {
+    //     if(!up) {
+    //         up = lightUp(row - count, col, originalRowIndex, originalColumnIndex)
+    //     }
+    //     if(!down) {
+    //         down = lightUp(row + count, col, originalRowIndex, originalColumnIndex)
+    //     }
+    //     if(!left) {
+    //         left = lightUp(row, col - count, originalRowIndex, originalColumnIndex)
+    //     }
+    //     if(!right) {
+    //         right = lightUp(row, col + count, originalRowIndex, originalColumnIndex)
+    //     }
+    //     if(up && down && left && right) { done = true }
+    //     count++
+    // }
+    let intervalRef = setTimeout(makeLightHelper, 200)
+    
+    function makeLightHelper() {
         if(!up) {
             up = lightUp(row - count, col, originalRowIndex, originalColumnIndex)
         }
@@ -288,6 +310,9 @@ function makeLight(row, col) {
         }
         if(up && down && left && right) { done = true }
         count++
+        if(!done) { 
+            setTimeout(makeLightHelper, 200) 
+        } else { checkForWin() }
     }
 }
 
@@ -400,13 +425,13 @@ function startGame() {
     } else {
         clearTable(gameBoard)
     }
-    if(difficulty.selectedIndex < 3) {
-        grids[difficulty.selectedIndex].map(row => gameBoard.innerHTML += row)
+    if(roomSelect.selectedIndex < 3) {
+        grids[roomSelect.selectedIndex].map(row => gameBoard.innerHTML += row)
     } else {
-        localStorage.getItem(difficulty.options[difficulty.selectedIndex].text).split(",").map(row => gameBoard.innerHTML += row)
+        localStorage.getItem(roomSelect.options[roomSelect.selectedIndex].text).split(",").map(row => gameBoard.innerHTML += row)
     }
-    // roomNameSpan.textContent = difficulty.options[difficulty.selectedIndex].text
-    roomNameSpan.appendChild(difficulty.options[difficulty.selectedIndex])
+    roomNameSpan.textContent = roomSelect.options[roomSelect.selectedIndex].text
+    // roomNameSpan.appendChild(roomSelect.options[roomSelect.selectedIndex].text)
     player = document.querySelector("#nameInput").value
     document.querySelector("#name").innerText = "Játékos neve: " +  player
     size = gameBoard.querySelectorAll("tr").length
@@ -417,7 +442,7 @@ function startGame() {
 function startTimer(startDate) {
     return setInterval(() => {
         displayedElapsedTime = getElapsedTime(startDate)
-        timeDiv.innerText = displayedElapsedTime
+        timeSpan.innerText = displayedElapsedTime
     }, 1000)
 }
 
@@ -436,7 +461,7 @@ function checkForWin() {
     let roomCell = newRow.appendChild(document.createElement("td"))
     roomCell.innerText = roomNameSpan.innerText
     let timeCell = newRow.appendChild(document.createElement("td"))
-    timeCell.innerText = timeDiv.innerText
+    timeCell.innerText = timeSpan.innerText
     return true;
 }
 
@@ -734,5 +759,3 @@ const easyGameBoardRows = [
 ]
 
 let grids = [easyGameBoardRows, hardGameBoardRows, extremeGameBoardRows]
-
-const baseGameDiv = '<h1 id="name"></h1><table><tbody id="gameBoard"></tbody></table><button id="pauseGame">Játék megállítása</button><div id="win" hidden><h1>WIN</h1><button id="restart">Újrakezdés</button</div><div id="save" hidden><form><label for="gameName">Jatekmenet neve</label><input type="text" id="gameName"><input type="button" id="saveBtn" value="Mentés"></form></div>'
