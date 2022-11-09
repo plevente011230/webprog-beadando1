@@ -20,6 +20,11 @@ const savedGamesSelect = document.querySelector("#savedGames")
 const loadGameBtn = document.querySelector("#loadGame")
 const timeDiv = document.querySelector("#time")
 const continueBtn = document.querySelector("#continue")
+const prevoiusGamesDiv = document.querySelector("#previousGames")
+const scoresTable = document.querySelector("#scores")
+const roomNameSpan = document.querySelector("#roomName")
+const backBtn = document.querySelector("#back")
+const winDiv = document.querySelector("#win")
 
 startBtn.addEventListener("click", startGame)
 restartBtn.addEventListener("click", startGame)
@@ -33,6 +38,7 @@ pauseBtn.addEventListener("click", pauseGame)
 saveBtn.addEventListener("click", saveGameProgress)
 loadGameBtn.addEventListener("click", loadGame)
 continueBtn.addEventListener("click", continueEditing)
+backBtn.addEventListener("click", backToMenu)
 
 let inputAllowed = false
 let wrongCells
@@ -41,8 +47,17 @@ const bulb = '💡'
 let player
 let size
 let pausedGames = []
+let pausedGamesTimers = []
 let displayedElapsedTime
 let timerRef
+let startDate = ""
+
+function backToMenu() {
+    gameDiv.hidden = true
+    winDiv.hidden = true
+    menuDiv.hidden = false
+    prevoiusGamesDiv.hidden = false
+}
 
 function continueEditing() {
     saveDiv.hidden = true
@@ -52,7 +67,12 @@ function continueEditing() {
 function loadGame() {
     menuDiv.hidden = true
     gameDiv.hidden = false
+    prevoiusGamesDiv.hidden = true
     menuDiv.innerHTML = pausedGames[savedGamesSelect.selectedIndex]
+    let elapsedTime = pausedGamesTimers[savedGamesSelect.selectedIndex]
+    startDate = new Date().getTime() - elapsedTime
+    timerRef = startTimer(new Date(startDate))
+    darkCells = Array.from(gameBoard.querySelectorAll(".dark-cell"))
 }
 
 function getElapsedTime(startTime) {
@@ -80,6 +100,7 @@ function saveRoom() {
     clearTable(editorDiv)
     editorDiv.hidden = true
     menuDiv.hidden = false
+    prevoiusGamesDiv.hidden = false
 }
 
 function placeBarrier(e) {
@@ -114,6 +135,7 @@ function startEditing() {
 function openEditor() {
     menuDiv.hidden = true
     editorDiv.hidden = false
+    prevoiusGamesDiv.hidden = true
     generateTable()
     inputAllowed = false
 }
@@ -135,7 +157,7 @@ function clearTable(table) {
 }
 
 function pauseGame() {
-    pausedGames.push(gameDiv.innerHTML)
+    inputAllowed = false
     saveDiv.hidden = false
 }
 
@@ -145,6 +167,11 @@ function saveGameProgress() {
     saveDiv.hidden = true
     gameDiv.hidden = true
     menuDiv.hidden = false
+    prevoiusGamesDiv.hidden = false
+    clearInterval(timerRef)
+    pausedGamesTimers.push(new Date().getTime() - startDate.getTime())
+    pausedGames.push(gameDiv.innerHTML)
+    startTime = ""
 }
 
 function placeBulb(e) {
@@ -361,15 +388,12 @@ function getCell(row, col) {
 
 function startGame() {
     menuDiv.hidden = true
-    document.querySelector("#win").hidden = true
+    prevoiusGamesDiv.hidden = true
+    winDiv.hidden = true
     gameDiv.hidden = false
     displayedElapsedTime = "00:00"
-    let startDate = new Date()
+    startDate = new Date()
     timerRef = startTimer(startDate)
-    // let getElapsedTimeIntervalRef = setInterval(() => {
-    //     displayedElapsedTime = getElapsedTime(startDate)
-    //     timeDiv.innerText = displayedElapsedTime
-    // }, 1000)
     inputAllowed = true
     if(gameDiv.hidden) {
         gameDiv.hidden = false
@@ -381,7 +405,8 @@ function startGame() {
     } else {
         localStorage.getItem(difficulty.options[difficulty.selectedIndex].text).split(",").map(row => gameBoard.innerHTML += row)
     }
-    
+    // roomNameSpan.textContent = difficulty.options[difficulty.selectedIndex].text
+    roomNameSpan.appendChild(difficulty.options[difficulty.selectedIndex])
     player = document.querySelector("#nameInput").value
     document.querySelector("#name").innerText = "Játékos neve: " +  player
     size = gameBoard.querySelectorAll("tr").length
@@ -402,9 +427,16 @@ function checkForWin() {
         if(cell.className == "dark-cell" && cell.style.color != "green" && cell.innerText != "") { return false; }
         if(cell.className == "plain-cell" || cell.className == "wrong-cell") { return false; }
     }
-    document.querySelector("#win").hidden = false
+    winDiv.hidden = false
     inputAllowed = false
     clearInterval(timerRef)
+    let newRow = scoresTable.appendChild(document.createElement("tr"))
+    let playerCell = newRow.appendChild(document.createElement("td"))
+    playerCell.innerText = player
+    let roomCell = newRow.appendChild(document.createElement("td"))
+    roomCell.innerText = roomNameSpan.innerText
+    let timeCell = newRow.appendChild(document.createElement("td"))
+    timeCell.innerText = timeDiv.innerText
     return true;
 }
 

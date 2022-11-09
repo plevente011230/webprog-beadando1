@@ -35,3 +35,7 @@ td {
     background-color: black;
     color: green;
 }
+
+.scores-table>thead>tr>th {
+    text-decoration: underline;
+}
