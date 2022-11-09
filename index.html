@@ -50,7 +50,7 @@
 
     <div id="game" hidden>
         <h1 id="name"></h1>
-        <h2 id=>Szoba neve: <span id="roomName>"></span></h2>
+        <h2 id="roomName"></h2>
         <h2 id>Eltelt idő: <span id="time"></span> </h2>
         <table>
             <tbody id="gameBoard"></tbody>
@@ -73,8 +73,8 @@
 
     <div id="editor" hidden>
         <form>
-            <label for="roomName">Pálya neve: </label>
-            <input type="text" id="roomName">
+            <label for="customRoomName">Pálya neve: </label>
+            <input type="text" id="customRoomName">
             <label for="roomSize">Szoba mérete: </label>
             <input id="roomSize" type="range" min="5" max="15" value="5"><br>
             <input type="button" id="startEditing" value="Cellák szerkesztése">

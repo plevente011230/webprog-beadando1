@@ -11,7 +11,7 @@ const roomEditor = document.querySelector("#roomEditor")
 const roomSizeInput = document.querySelector("#roomSize")
 const startEditingBtn = document.querySelector("#startEditing")
 const saveRoomBtn = document.querySelector("#saveRoom")
-const roomNameInput = document.querySelector("#roomName")
+const roomNameInput = document.querySelector("#customRoomName")
 const pauseBtn = document.querySelector("#pauseGame")
 const saveDiv = document.querySelector("#save")
 const saveBtn = document.querySelector("#saveBtn")
@@ -22,7 +22,7 @@ const timeSpan = document.querySelector("#time")
 const continueBtn = document.querySelector("#continue")
 const prevoiusGamesDiv = document.querySelector("#previousGames")
 const scoresTable = document.querySelector("#scores")
-const roomNameSpan = document.querySelector("#roomName")
+const roomNameH2 = document.querySelector("#roomName")
 const backBtn = document.querySelector("#back")
 const winDiv = document.querySelector("#win")
 const loadSavedGameDiv = document.querySelector("#loadSavedGame")
@@ -59,6 +59,7 @@ function backToMenu() {
     winDiv.hidden = true
     menuDiv.hidden = false
     prevoiusGamesDiv.hidden = false
+    room = ""
 }
 
 function continueEditing() {
@@ -76,6 +77,8 @@ function loadGame() {
     timerRef = startTimer(new Date(startDate))
     darkCells = Array.from(gameBoard.querySelectorAll(".dark-cell"))
     inputAllowed = true
+    room = roomSelect.options[roomSelect.selectedIndex].text
+    roomNameH2.innerText = "Szoba neve:" + room
 }
 
 function getElapsedTime(startTime) {
@@ -176,6 +179,7 @@ function saveGameProgress() {
     pausedGamesTimers.push(new Date().getTime() - startDate.getTime())
     pausedGames.push(gameDiv.innerHTML)
     startTime = ""
+    room = ""
 }
 
 function placeBulb(e) {
@@ -277,22 +281,6 @@ function makeLight(row, col) {
     down = false
     left = false
     right = false
-    // while(!done) {
-    //     if(!up) {
-    //         up = lightUp(row - count, col, originalRowIndex, originalColumnIndex)
-    //     }
-    //     if(!down) {
-    //         down = lightUp(row + count, col, originalRowIndex, originalColumnIndex)
-    //     }
-    //     if(!left) {
-    //         left = lightUp(row, col - count, originalRowIndex, originalColumnIndex)
-    //     }
-    //     if(!right) {
-    //         right = lightUp(row, col + count, originalRowIndex, originalColumnIndex)
-    //     }
-    //     if(up && down && left && right) { done = true }
-    //     count++
-    // }
     let intervalRef = setTimeout(makeLightHelper, 200)
     
     function makeLightHelper() {
@@ -430,8 +418,9 @@ function startGame() {
     } else {
         localStorage.getItem(roomSelect.options[roomSelect.selectedIndex].text).split(",").map(row => gameBoard.innerHTML += row)
     }
-    roomNameSpan.textContent = roomSelect.options[roomSelect.selectedIndex].text
-    // roomNameSpan.appendChild(roomSelect.options[roomSelect.selectedIndex].text)
+    console.log(roomSelect.options[roomSelect.selectedIndex].text)
+    room = roomSelect.options[roomSelect.selectedIndex].text
+    roomNameH2.innerText = "Szoba neve:" + room
     player = document.querySelector("#nameInput").value
     document.querySelector("#name").innerText = "Játékos neve: " +  player
     size = gameBoard.querySelectorAll("tr").length
@@ -459,7 +448,7 @@ function checkForWin() {
     let playerCell = newRow.appendChild(document.createElement("td"))
     playerCell.innerText = player
     let roomCell = newRow.appendChild(document.createElement("td"))
-    roomCell.innerText = roomNameSpan.innerText
+    roomCell.innerText = room
     let timeCell = newRow.appendChild(document.createElement("td"))
     timeCell.innerText = timeSpan.innerText
     return true;
